@@ -1,5 +1,5 @@
 package sistemaGestion.modelos;
-import java.util.*;
+
 
 public class Visitante {
     private String rut;

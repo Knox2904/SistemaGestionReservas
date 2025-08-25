@@ -3,13 +3,12 @@ package sistemaGestion.modelos;
 public class Cabania { 
     private String idCabania; 
     private int capacidad;
-    private double tarifaNoche;
 
-    // CONSTRUCTOR
-    public Cabania(String idCabania, int capacidad, double tarifaNoche) {
+
+    // constructor
+    public Cabania(String idCabania, int capacidad) {
         this.idCabania = idCabania;
         this.capacidad = capacidad;
-        this.tarifaNoche = tarifaNoche;
     }
 
     // getter
@@ -21,7 +20,4 @@ public class Cabania {
         return capacidad;
     }
 
-    public double getTarifaNoche() {
-        return tarifaNoche;
-    }
 }

@@ -1,6 +1,7 @@
 package sistemaGestion.modelos;
-import java.util.*;
+
 import java.time.*;
+
 
 public class Reserva {
     private int codigoReserva;
@@ -10,9 +11,10 @@ public class Reserva {
     private LocalDate fechaLlegada; 
     private LocalDate fechaSalida;  
     private String estado;
+    private double montoTotal ; 
 
     
-    public Reserva(int codigoReserva, String rutVisitante, String idAlojamiento, String tipoAlojamiento, LocalDate fechaLlegada, LocalDate fechaSalida, String estado) {
+    public Reserva(int codigoReserva, String rutVisitante, String idAlojamiento, String tipoAlojamiento, LocalDate fechaLlegada, LocalDate fechaSalida, String estado , double montoTotal) {
         this.codigoReserva = codigoReserva;
         this.rutVisitante = rutVisitante;
         this.idAlojamiento = idAlojamiento;
@@ -20,6 +22,7 @@ public class Reserva {
         this.fechaLlegada = fechaLlegada;
         this.fechaSalida = fechaSalida;
         this.estado = estado;
+        this.montoTotal = montoTotal;
     }
 
     // getter
@@ -51,8 +54,13 @@ public class Reserva {
         return estado;
     }
     
+    public double getMontoTotal() {
+        return montoTotal;
+    }
+    
     // setter
     public void setEstado(String estado) {
         this.estado = estado;
     }
+    
 }
