@@ -12,19 +12,25 @@ public class SistemaReservas {
 	private static final double TarifaUnicaPorNoche = 5000; //money
 	
 	//crear listas para gestion
-	private ArrayList<Visitante> listaVisitantes = new ArrayList<>();
-	private ArrayList<Camping> listaCampings = new ArrayList<>();
-	private ArrayList<Cabania> listaCabanias = new ArrayList<>();
-	private ArrayList<Reserva> listaReservas = new ArrayList<>();
+	private List <ParqueNacional> listaParques = new ArrayList<>() ; 
+	private Map <String , Visitante> mapaVisitantes = new HashMap<>() ; 
+	private List<Reserva> listaReservas = new ArrayList<>();
 	private int codigoDeReserva = 1 ;
 	
 
 	public SistemaReservas() {
 	    
-	    listaCampings.add(new Camping("CAMP01", "Camping El Roble", 40));
-	    listaCampings.add(new Camping("CAMP02", "Camping La Laguna", 60));
-	    listaCabanias.add(new Cabania("CAB01", 4));
-	    listaCabanias.add(new Cabania("CAB02", 6));
+		ParqueNacional conguillio = new ParqueNacional("PN01", "Parque Nacional Conguillío");
+	    ParqueNacional torresDelPaine = new ParqueNacional("PN02", "Parque Nacional Torres del Paine");
+	    
+	    conguillio.agregarCamping(new Camping("CAMP01", "Camping El Roble", 40));
+	    torresDelPaine.agregarCamping(new Camping("CAMP02", "Camping La Laguna", 60));
+	    torresDelPaine.agregarCabania(new Cabania("CAB01", 4));
+	    
+	    this.listaParques.add(torresDelPaine); 
+	    this.listaParques.add(conguillio) ; 
+	    
+	    
 	}
 	
 	
@@ -34,9 +40,11 @@ public class SistemaReservas {
 	public void registrarVisitante(String rut , String nombre , String email) {
 		
 		Visitante nuevoVisitante = new Visitante(rut, nombre, email);
-		this.listaVisitantes.add(nuevoVisitante) ; 
+		this.mapaVisitantes.put(rut, nuevoVisitante) ; 
 		System.out.println("Visitante " + nombre + " registrado exitosamente") ; 
 	}
+	
+	//----------------------------------------------------------------
 	
 	public void crearReserva(String rutVisitante, String idAlojamiento, String tipo, LocalDate llegada, LocalDate salida)  {
 	    // --- Bloque de validaciones de fechas ---
@@ -52,22 +60,37 @@ public class SistemaReservas {
 	    // --- Fin del Bloque de validaciones ---
 
 	    //VERIFICAMOS QUE EL ALOJAMIENTO EXISTA
+	    
 	    boolean alojamientoEncontrado = false;
-	    if (tipo.equalsIgnoreCase("Camping")) {
-	        for (Camping c : listaCampings) {
-	            if (c.getIdCamping().equalsIgnoreCase(idAlojamiento)) {
-	                alojamientoEncontrado = true;
+	    
+	    if (tipo.equalsIgnoreCase("Cabaña")) {     
+	        for (ParqueNacional parque : listaParques) {
+	            for (Cabania cab : parque.getListaCabanias()) {
+	                if (cab.getIdCabaña().equalsIgnoreCase(idAlojamiento)) {
+	                    alojamientoEncontrado = true;
+	                    break; // Si la encontramos, salimos del bucle de cabañas
+	                }
+	            }
+	            if (alojamientoEncontrado) {
 	                break;
 	            }
 	        }
-	    } else if (tipo.equalsIgnoreCase("Cabaña")) {
-	        for (Cabania cab : listaCabanias) {
-	            if (cab.getIdCabaña().equalsIgnoreCase(idAlojamiento)) {
-	                alojamientoEncontrado = true;
-	                break;
+	    } else if (tipo.equalsIgnoreCase("Camping")) {
+	        for (ParqueNacional parque : listaParques) {
+	            for (Camping c : parque.getListaCampings()) {
+	                if (c.getIdCamping().equalsIgnoreCase(idAlojamiento)) {
+	                    alojamientoEncontrado = true;
+	                    break; // Salimos del bucle de campings
+	                }
+	            }
+	            if (alojamientoEncontrado) {
+	                break; // Salimos del bucle de parques
 	            }
 	        }
 	    }
+		        
+	    
+	    
 
 	    if (!alojamientoEncontrado) {
 	        System.out.println("Error: El ID del alojamiento no fue encontrado.");
@@ -96,6 +119,8 @@ public class SistemaReservas {
 	    System.out.println("\nReserva creada con éxito con el codigo " + nuevaReserva.getCodigoReserva());
 	}
 	
+	//-----------------------------------------------------------------------------
+	
 	public void mostrarTodasLasReservas() {
 		
 		System.out.println("\n--- Listado de Todas las Reservas ---");
@@ -114,30 +139,32 @@ public class SistemaReservas {
 		}
 	}
 	
-	//buscador de visitantes 
+	//-----------------------------------------------------------------------------
+	
 	public Visitante buscarVisitante(String rut) {
-		
-		for(Visitante v : this.listaVisitantes) {
-			if (v.getRut().equalsIgnoreCase(rut)) return v  ; 
-			
-		}
-		return null ; 
-		
+		return this.mapaVisitantes.get(rut);
 	}
 	
-	
+	//-----------------------------------------------------------------------------
 	
 	public void mostrarOpcionesDeAlojamiento() {
-		System.out.println("\n--- Opciones de alojamiento disponible ---");
-		System.out.println("Campings:") ; 
-		for(Camping c : this.listaCampings) {
-			System.out.println("   ID: " + c.getIdCamping() + ", Nombre: " + c.getNombre()) ; 
-		}
-		System.out.println("Cabañas:");
-		for(Cabania cab : this.listaCabanias) {
-			System.out.println("   ID: " + cab.getIdCabaña() + ", Capacidad: " + cab.getCapacidad() + " personas") ;
-		}
+	    System.out.println("\n--- Opciones de alojamiento disponible ---");
+	    // Recorre cada parque y muestra sus alojamientos
+	    for (ParqueNacional parque : this.listaParques) {
+	        System.out.println("\n>> Parque: " + parque.getNombre());
+	        System.out.println("  Campings:");
+	        for (Camping c : parque.getListaCampings()) {
+	            System.out.println("    ID: " + c.getIdCamping() + ", Nombre: " + c.getNombre());
+	        }
+	        System.out.println("  Cabañas:");
+	        for (Cabania cab : parque.getListaCabanias()) {
+	            System.out.println("    ID: " + cab.getIdCabaña() + ", Capacidad: " + cab.getCapacidad() + " personas");
+	        }
+	    }
 	}
+
+	
+	//-----------------------------------------------------------------------------
 	
 	public Reserva buscarReservaPorCodigo(int codigo) {
 	    for (Reserva r : this.listaReservas) {
@@ -148,6 +175,8 @@ public class SistemaReservas {
 	    return null; // no esta
 	}
 	
+	
+	//-----------------------------------------------------------------------------
 	
 	public void cancelarReserva(int codigo) {
 	    
@@ -165,6 +194,25 @@ public class SistemaReservas {
 	        System.out.println("Exito: La reserva con codigo " + codigo + " ha sido cancelada.");
 	    }
 	}
+	
+	public void cancelarReserva(Reserva reserva) {
+	    if (reserva == null) {
+	        System.out.println("Error: La reserva proporcionada es nula.");
+	        return;
+	    }
+
+	    if (reserva.getEstado().equals("Cancelada")) {
+	        System.out.println("Información: Esta reserva ya se encontraba cancelada.");
+	    } else {
+	        reserva.setEstado("Cancelada");
+	        System.out.println("Éxito: La reserva con código " + reserva.getCodigoReserva() + " ha sido cancelada.");
+	    }
+	}
+	
+	
+	//-----------------------------------------------------------------------------
+	
+	
 	
 	
 	
