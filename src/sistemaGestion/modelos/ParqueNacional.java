@@ -25,6 +25,11 @@ public class ParqueNacional {
 		
 	}
 	
+	public void agregarCamping(String id, String nombre, int sitios) {
+	    Camping nuevoCamping = new Camping(id, nombre, sitios);
+	    this.listaCampings.add(nuevoCamping);
+	}
+	
 	
 	public void agregarCabañas(Cabaña cabaña) {
 		listaCabañas.add(cabaña) ; 
