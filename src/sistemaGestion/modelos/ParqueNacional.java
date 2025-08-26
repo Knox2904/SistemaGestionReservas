@@ -8,12 +8,12 @@ public class ParqueNacional {
 	private String idParque ; 
 	private String nombre ; 
 	private ArrayList<Camping> listaCampings ; 
-	private ArrayList<Cabania> listaCabanias ; 
+	private ArrayList<Cabaña> listaCabañas ; 
 	
 	public ParqueNacional(String idParque , String nombre) {
 		this.idParque = idParque ; 
 		this.nombre = nombre ; 
-		this.listaCabanias = new ArrayList<>() ; 
+		this.listaCabañas = new ArrayList<>() ; 
 		this.listaCampings = new ArrayList<>();
 		
 		
@@ -26,8 +26,8 @@ public class ParqueNacional {
 	}
 	
 	
-	public void agregarCabania(Cabania cabania) {
-		listaCabanias.add(cabania) ; 
+	public void agregarCabañas(Cabaña cabaña) {
+		listaCabañas.add(cabaña) ; 
 	}
 	
 	
@@ -44,8 +44,8 @@ public class ParqueNacional {
 		return listaCampings ; 
 	}
 	
-	public ArrayList<Cabania> getListaCabanias () {
-		return listaCabanias ; 
+	public ArrayList<Cabaña> getListaCabañas () {
+		return listaCabañas ; 
 	}	
 	
 	

@@ -1,12 +1,12 @@
 package sistemaGestion.modelos;
 
-public class Cabania { 
+public class Cabaña { 
     private String idCabania; 
     private int capacidad;
 
 
     // constructor
-    public Cabania(String idCabania, int capacidad) {
+    public Cabaña(String idCabania, int capacidad) {
         this.idCabania = idCabania;
         this.capacidad = capacidad;
     }

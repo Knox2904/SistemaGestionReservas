@@ -25,7 +25,7 @@ public class SistemaReservas {
 	    
 	    conguillio.agregarCamping(new Camping("CAMP01", "Camping El Roble", 40));
 	    torresDelPaine.agregarCamping(new Camping("CAMP02", "Camping La Laguna", 60));
-	    torresDelPaine.agregarCabania(new Cabania("CAB01", 4));
+	    torresDelPaine.agregarCabañas(new Cabaña("CAB01", 4));
 	    
 	    this.listaParques.add(torresDelPaine); 
 	    this.listaParques.add(conguillio) ; 
@@ -65,7 +65,7 @@ public class SistemaReservas {
 	    
 	    if (tipo.equalsIgnoreCase("Cabaña")) {     
 	        for (ParqueNacional parque : listaParques) {
-	            for (Cabania cab : parque.getListaCabanias()) {
+	            for (Cabaña cab : parque.getListaCabañas()) {
 	                if (cab.getIdCabaña().equalsIgnoreCase(idAlojamiento)) {
 	                    alojamientoEncontrado = true;
 	                    break; // Si la encontramos, salimos del bucle de cabañas
@@ -157,7 +157,7 @@ public class SistemaReservas {
 	            System.out.println("    ID: " + c.getIdCamping() + ", Nombre: " + c.getNombre());
 	        }
 	        System.out.println("  Cabañas:");
-	        for (Cabania cab : parque.getListaCabanias()) {
+	        for (Cabaña cab : parque.getListaCabañas()) {
 	            System.out.println("    ID: " + cab.getIdCabaña() + ", Capacidad: " + cab.getCapacidad() + " personas");
 	        }
 	    }
@@ -212,7 +212,9 @@ public class SistemaReservas {
 	
 	//-----------------------------------------------------------------------------
 	
-	
+	public List<ParqueNacional> getListaParques(){
+		return listaParques ; 
+	}
 	
 	
 	
