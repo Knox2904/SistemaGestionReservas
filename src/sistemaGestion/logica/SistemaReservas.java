@@ -26,6 +26,7 @@ public class SistemaReservas {
 	
 
 	public SistemaReservas() {
+		this.gestorArchivos = new GestionArchivos();
 		
 		this.listaReservas = gestorArchivos.cargarReservas(ARCHIVO_RESERVAS);
 	    this.mapaVisitantes = gestorArchivos.cargarVisitantes(ARCHIVO_VISITANTES);

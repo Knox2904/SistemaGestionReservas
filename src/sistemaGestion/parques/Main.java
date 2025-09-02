@@ -142,10 +142,10 @@ public class Main {
                 presionarEnterParaContinuar(sc);
                 break;
             case 7:
-                System.out.println("Guardando cambios antes de salir...");
-                sistema.guardarDatosAlSalir();
+            	limpiarConsola() ; 
                 System.out.println("Saliendo del sistema. ¡Hasta pronto!");
                 sc.close(); 
+                System.exit(0);
                 return; // Termina el programa
             default:
                 System.out.println("Opcion no valida. Por favor, intente de nuevo.");
