@@ -5,6 +5,7 @@ import java.time.*;
 //clases
 import sistemaGestion.modelos.*;
 import sistemaGestion.logica.*;
+import sistemaGestion.exceptions.*;
 
 public class Main {
 	public static void main(String[] args) {
@@ -24,16 +25,17 @@ public class Main {
 			System.out.println("\n--- Sistema de Parques Nacionales ---");
 			System.out.println("--- Administración de Alojamientos ---");
 			System.out.println("1. Agregar Alojamiento a un Parque");
-			System.out.println("2. Mostrar Alojamientos por Parque");
+			System.out.println("2. Eliminar un Parque Nacional"); //
+			System.out.println("3. Mostrar Alojamientos por Parque");
 			System.out.println("--- Gestión de Reservas ---");
-			System.out.println("3. Registrar Visitante");
-			System.out.println("4. Crear Reserva");
-			System.out.println("5. Editar Fechas de Reserva");   
-		    System.out.println("6. Eliminar Reserva");           		
-			System.out.println("7. Cancelar Reserva");
-			System.out.println("8. Ver Todas las Reservas");
-			System.out.println("9. Filtrar Reservas por Parque");
-			System.out.println("10. Salir");
+			System.out.println("4. Registrar Visitante");
+			System.out.println("5. Crear Reserva");
+			System.out.println("6. Editar Fechas de Reserva");   
+		    System.out.println("7. Eliminar Reserva");           		
+			System.out.println("8. Cancelar Reserva");
+			System.out.println("9. Ver Todas las Reservas");
+			System.out.println("10. Filtrar Reservas por Parque");
+			System.out.println("11. Salir");
 			System.out.print("Seleccione una opción: ");			
 			
 			int opcion = sc.nextInt() ;
@@ -82,14 +84,39 @@ public class Main {
 			    presionarEnterParaContinuar(sc);
 			    break ; 
 			    
-			    
+			
 			case 2 : 
+				 System.out.println("\n--- Eliminación de Parque Nacional ---");
+				 System.out.print("Ingrese el nombre del parque a eliminar: ");
+				 String nombreParqueEliminar = sc.nextLine();
+				    
+				 System.out.print("ADVERTENCIA: Esta acción es permanente. ¿Está seguro? (S/N): ");
+				 String confirmacionParque = sc.nextLine();
+
+				 if (confirmacionParque.equalsIgnoreCase("S")) {
+				     try {
+				         sistema.eliminarParqueNacional(nombreParqueEliminar);
+				     } 
+				     catch (ReglaDeNegocioException | EntidadNoEncontradaException e) {
+				         System.err.println("Error al eliminar el parque: " + e.getMessage());
+				     }
+				     
+				    } 
+				  else {
+				        System.out.println("Operación cancelada.");
+				    }
+				 
+				    presionarEnterParaContinuar(sc);
+				    break;
+			    
+			    
+			case 3 : 
 			    sistema.mostrarOpcionesDeAlojamiento();
 			    presionarEnterParaContinuar(sc);
 			    break;	
 			    
 			
-            case 3:
+            case 4:
             	System.out.print("Ingrese RUT: ");
                 String rut = sc.nextLine();
                 System.out.print("Ingrese nombre: ");
@@ -102,91 +129,135 @@ public class Main {
                 break;
                 
                 
-            case 4:
-                System.out.println("\n--- Creación de Nueva Reserva ---");
-                System.out.print("Ingrese RUT del visitante que hará la reserva: ");
-                String rutReserva = sc.nextLine();
+            case 5:
+            	try {
+            		System.out.println("\n--- Creación de Nueva Reserva ---");
+            		System.out.print("Ingrese RUT del visitante que hará la reserva: ");
+            		String rutReserva = sc.nextLine();
 
-                //Buscamos si el visitante existe
-                Visitante visitanteEncontrado = sistema.buscarVisitante(rutReserva);
+            		//Buscamos si el visitante existe
+            		Visitante visitanteEncontrado = sistema.buscarVisitante(rutReserva);
 
-                //Verificamos el resultado de la búsqueda
-                if (visitanteEncontrado == null) {
-                    System.out.println("Error: No se encontró un visitante con ese RUT. Por favor, registrelo primero (Opción 1).");
-                } 
-                else {
-                    //Si existe, continuamos pidiendo los datos de la reserva
-                    System.out.println("Visitante encontrado: " + visitanteEncontrado.getNombre());
+            		//Verificamos el resultado de la búsqueda
+            		if (visitanteEncontrado == null) {
+            			System.out.println("Error: No se encontró un visitante con ese RUT. Por favor, registrelo primero (Opción 1).");
+            		} 
+            		else {
+            			//Si existe, continuamos pidiendo los datos de la reserva
+            			System.out.println("Visitante encontrado: " + visitanteEncontrado.getNombre());
                     
-                    // Mostramos las opciones
-                    sistema.mostrarOpcionesDeAlojamiento();
+            			// Mostramos las opciones
+            			sistema.mostrarOpcionesDeAlojamiento();
                     
-                    System.out.print("\nIngrese el ID del Camping o Cabaña a reservar: ");
-                    String idAlojamiento = sc.nextLine();
+            			System.out.print("\nIngrese el ID del Camping o Cabaña a reservar: ");
+            			String idAlojamiento = sc.nextLine();
 
-                    System.out.print("Confirme el tipo ('Camping' o 'Cabaña'): ");
-                    String tipoAlojamiento = sc.nextLine();
+            			System.out.print("Confirme el tipo ('Camping' o 'Cabaña'): ");
+            			String tipoAlojamiento = sc.nextLine();
 
-                    // Pedimos las fechas
-                    LocalDate fechaLlegada = pedirFecha(sc, "Ingrese fecha de llegada (dd-MM-yyyy): ");
-                    LocalDate fechaSalida = pedirFecha(sc, "Ingrese fecha de salida (dd-MM-yyyy): ");
+            			// Pedimos las fechas
+            			LocalDate fechaLlegada = pedirFecha(sc, "Ingrese fecha de llegada (dd-MM-yyyy): ");
+            			LocalDate fechaSalida = pedirFecha(sc, "Ingrese fecha de salida (dd-MM-yyyy): ");
                     
-                    //Con todos los datos,llamamos al sistema
-                    sistema.crearReserva(rutReserva, idAlojamiento, tipoAlojamiento, fechaLlegada, fechaSalida);
-                }            	
+            			//Con todos los datos,llamamos al sistema
+            			sistema.crearReserva(rutReserva, idAlojamiento, tipoAlojamiento, fechaLlegada, fechaSalida);
+            			System.out.println("Reserva creada con exito");
+            		}
+            	}
+            	catch (ReglaDeNegocioException e) {
+                    System.err.println("Error al crear la reserva: " + e.getMessage());
+                }
+                
                 presionarEnterParaContinuar(sc);
                 break;
                 
                 
-            case 5 : 
-            	System.out.println("\n--- Edicion de Reserva ---");
+            case 6: 
+                System.out.println("\n--- Edicion de Reserva ---");
                 System.out.print("Ingrese el codigo de la reserva a editar: ");
                 int codigoEditar = sc.nextInt();
-                sc.nextLine(); 
-                Reserva resActual = sistema.buscarReservaPorCodigo(codigoEditar);
-                if (resActual != null) {
+                sc.nextLine(); // Limpiar buffer
+
+                try {
+                    // Buscamos la reserva.
+                    Reserva resActual = sistema.buscarReservaPorCodigo(codigoEditar);
+                    
+                    //mostramos los datos y pedimos los nuevos.
                     System.out.println("Datos actuales: " + resActual.toString());
                     LocalDate nuevaLlegada = pedirFecha(sc, "Ingrese la nueva fecha de llegada (dd-MM-yyyy): ");
                     LocalDate nuevaSalida = pedirFecha(sc, "Ingrese la nueva fecha de salida (dd-MM-yyyy): ");
-                    sistema.editarFechas(codigoEditar, nuevaLlegada, nuevaSalida);
+                    
+                    sistema.editarFechasReserva(codigoEditar, nuevaLlegada, nuevaSalida);
+
+                } 
+                catch (EntidadNoEncontradaException e) {
+                    System.err.println("Error de búsqueda: " + e.getMessage());
+                } 
+                catch (ReglaDeNegocioException e) {
+                    System.err.println("Error en la validación: " + e.getMessage());
                 }
                 presionarEnterParaContinuar(sc);
                 break;
                 
             	           	
-            case 6:
-            	System.out.println("\n--- Eliminación de Reserva ---");
-                System.out.print("Ingrese el código de la reserva a eliminar: ");
+            case 7: 
+                System.out.println("\n--- Eliminacion de Reserva ---");
+                System.out.print("Ingrese el codigo de la reserva a eliminar: ");
                 int codigoEliminar = sc.nextInt();
                 sc.nextLine();
-                System.out.print("¿Está seguro que desea eliminar esta reserva permanentemente? (S/N): ");
-                String confirmacion = sc.nextLine();
-                if (confirmacion.equalsIgnoreCase("S")) {
-                    sistema.eliminarReserva(codigoEliminar);
-                } else {
-                    System.out.println("Operación de eliminación cancelada.");
+
+                try {
+                    // Verificamos que la reserva exista
+                    Reserva reservaAEliminar = sistema.buscarReservaPorCodigo(codigoEliminar);
+                    System.out.println("Se eliminara la siguiente reserva: " + reservaAEliminar.toString());
+                    
+                    System.out.print("¿Esta seguro que desea eliminarla permanentemente? (S/N): ");
+                    String confirmacion = sc.nextLine();
+                    
+                    if (confirmacion.equalsIgnoreCase("S")) {
+                        
+                        boolean eliminado = sistema.eliminarReserva(codigoEliminar);
+                        if (!eliminado) {
+                            
+                            System.out.println("Hubo un problema al intentar eliminar la reserva.");
+                        }
+                    } 
+                    else {
+                        System.out.println("Operacion de Eliminacion cancelada.");
+                    }
+                } 
+                catch (EntidadNoEncontradaException e) {
+                    System.err.println("Error: " + e.getMessage());
                 }
-                presionarEnterParaContinuar(sc);
-                break; 
                 
-                
-            case 7:
-                System.out.println("\n--- Cancelacion de Reserva ---");
-                System.out.print("Ingrese el codigo de la reserva a cancelar: ");
-                int codigoCancelar = sc.nextInt();
-                sc.nextLine();
-                sistema.cancelarReserva(codigoCancelar);
                 presionarEnterParaContinuar(sc);
                 break;
                 
                 
             case 8:
+                System.out.println("\n--- Cancelacion de Reserva ---");
+                System.out.print("Ingrese el codigo de la reserva a cancelar: ");
+                int codigoCancelar = sc.nextInt();
+                sc.nextLine();
+
+                try {
+                    sistema.cancelarReserva(codigoCancelar);
+                } 
+                catch (EntidadNoEncontradaException e) {
+                    System.err.println("Error: " + e.getMessage());
+                }
+
+                presionarEnterParaContinuar(sc);
+                break;
+                
+                
+            case 9:
                 sistema.mostrarTodasLasReservas();
                 presionarEnterParaContinuar(sc);
                 break;
                 
                 
-            case 9 : 
+            case 10: 
             	System.out.println("\n--- Filtrar Reservas Activas por Parque ---");
                 System.out.print("Ingrese el nombre del parque a consultar: ");
                 String nombreParque = sc.nextLine();
@@ -207,7 +278,7 @@ public class Main {
                 break;
 
                 
-            case 10:
+            case 11:
             	limpiarConsola() ; 
                 System.out.println("Saliendo del sistema. ¡Hasta pronto!");
                 sc.close(); 

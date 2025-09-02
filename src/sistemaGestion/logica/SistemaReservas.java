@@ -3,6 +3,9 @@ package sistemaGestion.logica;
 import sistemaGestion.modelos.*;
 
 import sistemaGestion.datos.*;
+import sistemaGestion.exceptions.EntidadNoEncontradaException;
+import sistemaGestion.exceptions.ReglaDeNegocioException;
+
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -73,7 +76,7 @@ public class SistemaReservas {
 	
 	//----------------------------------------------------------------
 	
-	public void crearReserva(String rutVisitante, String idAlojamiento, String tipo, LocalDate llegada, LocalDate salida)  {
+	public void crearReserva(String rutVisitante, String idAlojamiento, String tipo, LocalDate llegada, LocalDate salida) throws ReglaDeNegocioException {
 	    
 		//busqueda del visitante 
 	    Visitante visitante = this.buscarVisitante(rutVisitante);
@@ -83,14 +86,11 @@ public class SistemaReservas {
 	    }
 		
 		// --- Bloque de validaciones de fechas ---
-	    LocalDate hoy = LocalDate.now();
-	    if (llegada.isBefore(hoy)) {
-	        System.out.println("Error: La fecha de llegada no puede ser una fecha pasada.");
-	        return;
+	    if (llegada.isBefore(LocalDate.now())) {
+	        throw new ReglaDeNegocioException("La fecha de llegada no puede ser una fecha pasada.");
 	    }
 	    if (salida.isBefore(llegada) || salida.isEqual(llegada)) {
-	        System.out.println("Error: La fecha de salida debe ser posterior a la fecha de llegada.");
-	        return;
+	        throw new ReglaDeNegocioException("La fecha de salida debe ser posterior a la de llegada.");
 	    }
 	    // --- Fin del Bloque de validaciones ---
 
@@ -204,34 +204,33 @@ public class SistemaReservas {
 	
 	//-----------------------------------------------------------------------------
 	
-	public Reserva buscarReservaPorCodigo(int codigo) {
+	public Reserva buscarReservaPorCodigo(int codigo) throws EntidadNoEncontradaException {
 	    for (Reserva r : this.listaReservas) {
 	        if (r.getCodigoReserva() == codigo) {
-	            return r; // esta
+	            return r; // Se encontró
 	        }
 	    }
-	    return null; // no esta
+	    
+	    throw new EntidadNoEncontradaException("No se encontro ninguna reserva con el codigo " + codigo + ".");
 	}
 	
 	
 	//-----------------------------------------------------------------------------
 	
-	public void cancelarReserva(int codigo) {
-	    
+	public void cancelarReserva(int codigo) throws EntidadNoEncontradaException {
+
 	    Reserva reservaParaCancelar = buscarReservaPorCodigo(codigo);
 
-	    if (reservaParaCancelar == null) {
-	        System.out.println("Error: No se encontro ninguna reserva con el codigo " + codigo + ".");
-	    } 
-	    else if (reservaParaCancelar.getEstado().equals("Cancelada")) {
-	        System.out.println("Informacion: Esta reserva ya se encontraba cancelada.");
+	    if (reservaParaCancelar.getEstado().equals("Cancelada")) {
+	        System.out.println("Información: Esta reserva ya se encontraba cancelada.");
 	    } 
 	    else {
-	        
 	        reservaParaCancelar.setEstado("Cancelada");
-	        System.out.println("Exito: La reserva con codigo " + codigo + " ha sido cancelada.");
+	        System.out.println("Éxito: La reserva con código " + codigo + " ha sido cancelada.");
 	    }
 	}
+	
+	//-----------------------------------------------------------------------------
 	
 	public void cancelarReserva(Reserva reserva) {
 	    if (reserva == null) {
@@ -241,7 +240,8 @@ public class SistemaReservas {
 
 	    if (reserva.getEstado().equals("Cancelada")) {
 	        System.out.println("Información: Esta reserva ya se encontraba cancelada.");
-	    } else {
+	    } 
+	    else {
 	        reserva.setEstado("Cancelada");
 	        System.out.println("Éxito: La reserva con código " + reserva.getCodigoReserva() + " ha sido cancelada.");
 	    }
@@ -265,50 +265,38 @@ public class SistemaReservas {
 	
 	//-------------------------------------------------------------------------------
 	
-	public boolean eliminarReserva(int codigo) {
-		Reserva reservaAEliminar = buscarReservaPorCodigo(codigo) ; 
-		
-	    if (reservaAEliminar == null) {
-	        System.out.println("Error: No se encontró ninguna reserva con el código " + codigo + ".");
-	        return false;
-	    }
+	public boolean eliminarReserva(int codigo) throws EntidadNoEncontradaException {
+	    
+	    Reserva reservaAEliminar = buscarReservaPorCodigo(codigo);
 
 	    this.listaReservas.remove(reservaAEliminar);
-	    System.out.println("Exito: La reserva con codigo " + codigo + " ha sido eliminada permanentemente.");
+	    System.out.println("Éxito: La reserva con código " + codigo + " ha sido eliminada permanentemente.");
 	    return true;
-
 	}
 	
 	
 	//---------------------------------------------------------------------------------
 	
-	public boolean editarFechas(int codigo, LocalDate nuevaLlegada, LocalDate nuevaSalida) {
-		Reserva reservaAEditar = buscarReservaPorCodigo(codigo) ; 
-		
-		if(reservaAEditar == null ) {
-	        System.out.println("Error: No se encontró ninguna reserva con el código " + codigo + ".");
-	        return false;
+	public boolean editarFechasReserva(int codigo, LocalDate nuevaLlegada, LocalDate nuevaSalida) throws EntidadNoEncontradaException, ReglaDeNegocioException {
+	    
+	    Reserva reservaAEditar = buscarReservaPorCodigo(codigo);
+	    
+	    // --- Validacion ---
+	    if (nuevaSalida.isBefore(nuevaLlegada) || nuevaSalida.isEqual(nuevaLlegada)) {
+	        throw new ReglaDeNegocioException("La nueva fecha de salida debe ser posterior a la nueva fecha de llegada.");
 	    }
-		
-		//--- validacion --- 
-		if(nuevaSalida.isBefore(nuevaLlegada) || nuevaSalida.isEqual(nuevaLlegada)) {
-			System.out.println("Error : La nueva salida deve ser posterior a la nueva fecha de llegada.") ; 
-			
-		}
-		
+
 	    reservaAEditar.setFechaLlegada(nuevaLlegada);
 	    reservaAEditar.setFechaSalida(nuevaSalida);
-		
 	    
-	    //--- recalculo y re ajustes ---
+	    // --- Recalculo y reajustes ---
 	    long numeroNoches = ChronoUnit.DAYS.between(nuevaLlegada, nuevaSalida);
-	    double nuevoMonto = numeroNoches * TarifaUnicaPorNoche; 
+	    double nuevoMonto = numeroNoches * TarifaUnicaPorNoche;
 	    reservaAEditar.setMontoTotal(nuevoMonto);
 
 	    System.out.println("Exito: La reserva " + codigo + " ha sido actualizada.");
 	    System.out.println("Nuevo total por " + numeroNoches + " noches: $" + nuevoMonto);
 	    return true;
-		
 	}
 	
 	//------------------------------------------------------------------------------
@@ -354,12 +342,34 @@ public class SistemaReservas {
 	}
 	//------------------------------------------------------------------------------
 	
+	public void eliminarParqueNacional(String nombreParque) throws ReglaDeNegocioException, EntidadNoEncontradaException {
+	    
+	    List<Reserva> reservasDelParque = filtrarReservasActivasPorParque(nombreParque);
+	    if (!reservasDelParque.isEmpty()) {
+	        throw new ReglaDeNegocioException("No se puede eliminar el parque '" + nombreParque + "' porque tiene " + reservasDelParque.size() + " reservas activas.");
+	    }
+
+	    // si no tiene reservas, procedemos a eliminarlo
+	    ParqueNacional parqueAEliminar = null;
+	    for (ParqueNacional parque : this.listaParques) {
+	        if (parque.getNombre().equalsIgnoreCase(nombreParque)) {
+	            parqueAEliminar = parque;
+	            break;
+	        }
+	    }
+
+	    if (parqueAEliminar == null) {
+	        throw new EntidadNoEncontradaException("No se encontro el parque con el nombre '" + nombreParque + "'.");
+	    }
+
+	    this.listaParques.remove(parqueAEliminar);
+	    System.out.println("Parque '" + nombreParque + "' eliminado exitosamente.");
+	}
 	
 	
 	
 	
-	
-	
+	//------------------------------------------------------------------------------
 	
 
 }
