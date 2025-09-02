@@ -312,6 +312,52 @@ public class SistemaReservas {
 	}
 	
 	//------------------------------------------------------------------------------
+	/**
+	 * Filtra la lista principal de reservas y devuelve solo aquellas
+	 * que pertenecen a un parque nacional específico y están activas.
+	 * @param nombreParque El nombre del parque para el cual filtrar las reservas.
+	 * @return Una nueva lista con las reservas que cumplen el criterio.
+	 */
+	public List<Reserva> filtrarReservasActivasPorParque(String nombreParque) {
+	    List<Reserva> reservasFiltradas = new ArrayList<>();
+	    ParqueNacional parqueSeleccionado = null;
+
+	    //buscamos el objeto ParqueNacional que coincida con el nombre.
+	    for (ParqueNacional parque : this.listaParques) {
+	        if (parque.getNombre().equalsIgnoreCase(nombreParque)) {
+	            parqueSeleccionado = parque;
+	            break;
+	        }
+	    }
+
+	    // si no se encuentra el parque, devolvemos una lista vacia.
+	    if (parqueSeleccionado == null) {
+	        return reservasFiltradas;
+	    }
+
+	    //recorremos todas las reservas.
+	    for (Reserva reserva : this.listaReservas) {
+	        //verificamos dos condiciones: que este activa y que pertenezca al parque.
+	        if (reserva.getEstado().equalsIgnoreCase("Activa")) {
+	        	
+	            // Verificamos si el ID del alojamiento de la reserva existe en las listas del parque.
+	            boolean perteneceAlParque = parqueSeleccionado.getListaCampings().stream().anyMatch(c -> c.getIdCamping().equals(reserva.getIdAlojamiento()))
+	            		||parqueSeleccionado.getListaCabañas().stream().anyMatch(cab -> cab.getIdCabaña().equals(reserva.getIdAlojamiento()));
+	            
+	            if (perteneceAlParque) {
+	                reservasFiltradas.add(reserva);
+	            }
+	        }
+	    }
+
+	    return reservasFiltradas;
+	}
+	//------------------------------------------------------------------------------
+	
+	
+	
+	
+	
 	
 	
 	

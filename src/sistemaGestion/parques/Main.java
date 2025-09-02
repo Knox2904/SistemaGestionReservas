@@ -32,7 +32,8 @@ public class Main {
 		    System.out.println("6. Eliminar Reserva");           		
 			System.out.println("7. Cancelar Reserva");
 			System.out.println("8. Ver Todas las Reservas");
-			System.out.println("9. Salir");
+			System.out.println("9. Filtrar Reservas por Parque");
+			System.out.println("10. Salir");
 			System.out.print("Seleccione una opción: ");			
 			
 			int opcion = sc.nextInt() ;
@@ -185,7 +186,28 @@ public class Main {
                 break;
                 
                 
-            case 9:
+            case 9 : 
+            	System.out.println("\n--- Filtrar Reservas Activas por Parque ---");
+                System.out.print("Ingrese el nombre del parque a consultar: ");
+                String nombreParque = sc.nextLine();
+                
+                List<Reserva> reservasEncontradas = sistema.filtrarReservasActivasPorParque(nombreParque);
+                
+                if (reservasEncontradas.isEmpty()) {
+                    System.out.println("No se encontraron reservas activas para el parque '" + nombreParque + "'.");
+                } 
+                else {
+                    System.out.println("Se encontraron " + reservasEncontradas.size() + " reservas activas para '" + nombreParque + "':");
+                    
+                    for (Reserva r : reservasEncontradas) {
+                        System.out.println("- " + r.toString());
+                    }
+                }
+                presionarEnterParaContinuar(sc);
+                break;
+
+                
+            case 10:
             	limpiarConsola() ; 
                 System.out.println("Saliendo del sistema. ¡Hasta pronto!");
                 sc.close(); 
