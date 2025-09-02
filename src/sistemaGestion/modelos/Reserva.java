@@ -5,7 +5,7 @@ import java.time.*;
 
 public class Reserva {
     private int codigoReserva;
-    private String rutVisitante;
+    private Visitante visitante ; 
     private String idAlojamiento;
     private String tipoAlojamiento;
     private LocalDate fechaLlegada; 
@@ -14,9 +14,9 @@ public class Reserva {
     private double montoTotal ; 
 
     
-    public Reserva(int codigoReserva, String rutVisitante, String idAlojamiento, String tipoAlojamiento, LocalDate fechaLlegada, LocalDate fechaSalida, String estado , double montoTotal) {
+    public Reserva(int codigoReserva, Visitante visitante, String idAlojamiento, String tipoAlojamiento, LocalDate fechaLlegada, LocalDate fechaSalida, String estado, double montoTotal) {
         this.codigoReserva = codigoReserva;
-        this.rutVisitante = rutVisitante;
+        this.visitante = visitante; 
         this.idAlojamiento = idAlojamiento;
         this.tipoAlojamiento = tipoAlojamiento;
         this.fechaLlegada = fechaLlegada;
@@ -30,8 +30,8 @@ public class Reserva {
         return codigoReserva;
     }
 
-    public String getRutVisitante() {
-        return rutVisitante;
+    public Visitante getVisitante() {
+    	return visitante ; 
     }
     
     public String getIdAlojamiento() {

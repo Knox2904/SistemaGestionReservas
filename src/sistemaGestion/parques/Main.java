@@ -13,6 +13,10 @@ public class Main {
 		//creamos el scanner
 		Scanner sc = new Scanner(System.in) ; 
 		
+		//guardamos siempre los datos antes de salir SIEMPRE
+		//aunque lo cerremos por accidente o se corte la luz que ya a pasasdo antes 
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> sistema.guardarDatosAlSalir()));
+		
 		//emepzamos el bucle para leer datos 
 		while(true) {
 			limpiarConsola();
@@ -138,11 +142,13 @@ public class Main {
                 presionarEnterParaContinuar(sc);
                 break;
             case 7:
+                System.out.println("Guardando cambios antes de salir...");
+                sistema.guardarDatosAlSalir();
                 System.out.println("Saliendo del sistema. ¡Hasta pronto!");
                 sc.close(); 
                 return; // Termina el programa
             default:
-                System.out.println("Opción no válida. Por favor, intente de nuevo.");
+                System.out.println("Opcion no valida. Por favor, intente de nuevo.");
 			}
 		}
 	}

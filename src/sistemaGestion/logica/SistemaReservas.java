@@ -2,10 +2,11 @@ package sistemaGestion.logica;
 
 import sistemaGestion.modelos.*;
 
-
+import sistemaGestion.datos.*;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+
 
 public class SistemaReservas {
 	
@@ -17,20 +18,45 @@ public class SistemaReservas {
 	private List<Reserva> listaReservas = new ArrayList<>();
 	private int codigoDeReserva = 1 ;
 	
+	private GestionArchivos gestorArchivos;
+    private final String ARCHIVO_RESERVAS = "reservas.csv";
+    private final String ARCHIVO_VISITANTES = "visitantes.csv";
+	
+	
+	
 
 	public SistemaReservas() {
+		
+		this.listaReservas = gestorArchivos.cargarReservas(ARCHIVO_RESERVAS);
+	    this.mapaVisitantes = gestorArchivos.cargarVisitantes(ARCHIVO_VISITANTES);
+		
+	    if (this.listaReservas.isEmpty()) {
+	        this.codigoDeReserva = 1;
+	    } 
+	    else {
+	        
+	        this.codigoDeReserva = this.listaReservas.stream().mapToInt(Reserva::getCodigoReserva).max().orElse(0) + 1;
+	    }
 	    
-		ParqueNacional conguillio = new ParqueNacional("PN01", "Parque Nacional Conguillío");
+	    inicializarParques();
+	     
+	    
+	}
+	
+	//----------------------------------------------------
+	
+	
+	private void inicializarParques() {
+	    this.listaParques = new ArrayList<>();
+	    ParqueNacional conguillio = new ParqueNacional("PN01", "Parque Nacional Conguillío");
 	    ParqueNacional torresDelPaine = new ParqueNacional("PN02", "Parque Nacional Torres del Paine");
 	    
 	    conguillio.agregarCamping(new Camping("CAMP01", "Camping El Roble", 40));
 	    torresDelPaine.agregarCamping(new Camping("CAMP02", "Camping La Laguna", 60));
 	    torresDelPaine.agregarCabañas(new Cabaña("CAB01", 4));
 	    
-	    this.listaParques.add(torresDelPaine); 
-	    this.listaParques.add(conguillio) ; 
-	    
-	    
+	    this.listaParques.add(torresDelPaine);
+	    this.listaParques.add(conguillio);
 	}
 	
 	
@@ -47,7 +73,15 @@ public class SistemaReservas {
 	//----------------------------------------------------------------
 	
 	public void crearReserva(String rutVisitante, String idAlojamiento, String tipo, LocalDate llegada, LocalDate salida)  {
-	    // --- Bloque de validaciones de fechas ---
+	    
+		//busqueda del visitante 
+	    Visitante visitante = this.buscarVisitante(rutVisitante);
+	    if (visitante == null) {
+	        System.out.println("Error: El visitante con RUT " + rutVisitante + " no está registrado.");
+	        return; // detiene la ejecucion si no se encuentra
+	    }
+		
+		// --- Bloque de validaciones de fechas ---
 	    LocalDate hoy = LocalDate.now();
 	    if (llegada.isBefore(hoy)) {
 	        System.out.println("Error: La fecha de llegada no puede ser una fecha pasada.");
@@ -113,10 +147,11 @@ public class SistemaReservas {
 	    System.out.println("---------------------------------------");
 	    System.out.println("TOTAL A PAGAR: $" + montoFinal);
 
-	    Reserva nuevaReserva = new Reserva(codigoDeReserva, rutVisitante, idAlojamiento, tipo, llegada, salida, "Activa", montoFinal);
+	    Reserva nuevaReserva = new Reserva(codigoDeReserva, visitante, idAlojamiento, tipo, llegada, salida, "Activa", montoFinal);
+	    
 	    this.listaReservas.add(nuevaReserva);
 	    this.codigoDeReserva++;
-	    System.out.println("\nReserva creada con éxito con el codigo " + nuevaReserva.getCodigoReserva());
+	    System.out.println("\nReserva creada con éxito para " + visitante.getNombre() + " con el código " + nuevaReserva.getCodigoReserva());
 	}
 	
 	//-----------------------------------------------------------------------------
@@ -130,8 +165,10 @@ public class SistemaReservas {
 		}
 		
 		for(Reserva r : listaReservas) {
+			Visitante v = r.getVisitante() ; 
+			
 			System.out.println("Codigo: " + r.getCodigoReserva()) ; 
-			System.out.println("Rut: " + r.getRutVisitante()) ; 
+			System.out.println("Visitante: " + v.getNombre() + " (RUT: " + v.getRut() + ")");
 			System.out.println("Alojamiento: " + r.getIdAlojamiento()) ; 
 			System.out.println("Tipo: " + r.getTipoAlojamiento()) ; 
 			System.out.println("Estado: " + r.getEstado());
@@ -214,6 +251,15 @@ public class SistemaReservas {
 	
 	public List<ParqueNacional> getListaParques(){
 		return listaParques ; 
+	}
+	
+	//-----------------------------------------------------------------------------
+	
+	public void guardarDatosAlSalir() {
+	    System.out.println("Guardando datos antes de cerrar...");
+	    gestorArchivos.guardarReservas(ARCHIVO_RESERVAS, this.listaReservas);
+	    gestorArchivos.guardarVisitantes(ARCHIVO_VISITANTES, this.mapaVisitantes);
+	    System.out.println("Datos guardados.");
 	}
 	
 	
