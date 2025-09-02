@@ -28,9 +28,11 @@ public class Main {
 			System.out.println("--- Gestión de Reservas ---");
 			System.out.println("3. Registrar Visitante");
 			System.out.println("4. Crear Reserva");
-			System.out.println("5. Cancelar Reserva");
-			System.out.println("6. Ver Todas las Reservas");
-			System.out.println("7. Salir");
+			System.out.println("5. Editar Fechas de Reserva");   
+		    System.out.println("6. Eliminar Reserva");           		
+			System.out.println("7. Cancelar Reserva");
+			System.out.println("8. Ver Todas las Reservas");
+			System.out.println("9. Salir");
 			System.out.print("Seleccione una opción: ");			
 			
 			int opcion = sc.nextInt() ;
@@ -79,10 +81,12 @@ public class Main {
 			    presionarEnterParaContinuar(sc);
 			    break ; 
 			    
+			    
 			case 2 : 
 			    sistema.mostrarOpcionesDeAlojamiento();
 			    presionarEnterParaContinuar(sc);
 			    break;	
+			    
 			
             case 3:
             	System.out.print("Ingrese RUT: ");
@@ -95,6 +99,8 @@ public class Main {
                 sistema.registrarVisitante(rut, nombre, email);
                 presionarEnterParaContinuar(sc);
                 break;
+                
+                
             case 4:
                 System.out.println("\n--- Creación de Nueva Reserva ---");
                 System.out.print("Ingrese RUT del visitante que hará la reserva: ");
@@ -129,24 +135,64 @@ public class Main {
                 }            	
                 presionarEnterParaContinuar(sc);
                 break;
-            case 5:
-                System.out.println("\n--- Cancelación de Reserva ---");
-                System.out.print("Ingrese el código de la reserva a cancelar: ");
+                
+                
+            case 5 : 
+            	System.out.println("\n--- Edicion de Reserva ---");
+                System.out.print("Ingrese el codigo de la reserva a editar: ");
+                int codigoEditar = sc.nextInt();
+                sc.nextLine(); 
+                Reserva resActual = sistema.buscarReservaPorCodigo(codigoEditar);
+                if (resActual != null) {
+                    System.out.println("Datos actuales: " + resActual.toString());
+                    LocalDate nuevaLlegada = pedirFecha(sc, "Ingrese la nueva fecha de llegada (dd-MM-yyyy): ");
+                    LocalDate nuevaSalida = pedirFecha(sc, "Ingrese la nueva fecha de salida (dd-MM-yyyy): ");
+                    sistema.editarFechas(codigoEditar, nuevaLlegada, nuevaSalida);
+                }
+                presionarEnterParaContinuar(sc);
+                break;
+                
+            	           	
+            case 6:
+            	System.out.println("\n--- Eliminación de Reserva ---");
+                System.out.print("Ingrese el código de la reserva a eliminar: ");
+                int codigoEliminar = sc.nextInt();
+                sc.nextLine();
+                System.out.print("¿Está seguro que desea eliminar esta reserva permanentemente? (S/N): ");
+                String confirmacion = sc.nextLine();
+                if (confirmacion.equalsIgnoreCase("S")) {
+                    sistema.eliminarReserva(codigoEliminar);
+                } else {
+                    System.out.println("Operación de eliminación cancelada.");
+                }
+                presionarEnterParaContinuar(sc);
+                break; 
+                
+                
+            case 7:
+                System.out.println("\n--- Cancelacion de Reserva ---");
+                System.out.print("Ingrese el codigo de la reserva a cancelar: ");
                 int codigoCancelar = sc.nextInt();
-                sc.nextLine(); // Limpiamos el buffer
+                sc.nextLine();
                 sistema.cancelarReserva(codigoCancelar);
                 presionarEnterParaContinuar(sc);
                 break;
-            case 6:
+                
+                
+            case 8:
                 sistema.mostrarTodasLasReservas();
                 presionarEnterParaContinuar(sc);
                 break;
-            case 7:
+                
+                
+            case 9:
             	limpiarConsola() ; 
                 System.out.println("Saliendo del sistema. ¡Hasta pronto!");
                 sc.close(); 
                 System.exit(0);
                 return; // Termina el programa
+                
+                
             default:
                 System.out.println("Opcion no valida. Por favor, intente de nuevo.");
 			}

@@ -63,6 +63,19 @@ public class Reserva {
         this.estado = estado;
     }
     
+    public void setFechaLlegada(LocalDate fechaLlegada) {
+        this.fechaLlegada = fechaLlegada;
+    }
+
+    public void setFechaSalida(LocalDate fechaSalida) {
+        this.fechaSalida = fechaSalida;
+    }
+
+    public void setMontoTotal(double montoTotal) {
+        this.montoTotal = montoTotal;
+    }
+    
+    
     @Override
     public String toString() {
     	return " Reserva codigo: " + codigoReserva + 

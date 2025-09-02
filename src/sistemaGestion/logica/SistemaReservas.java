@@ -263,6 +263,57 @@ public class SistemaReservas {
 	    System.out.println("Datos guardados.");
 	}
 	
+	//-------------------------------------------------------------------------------
+	
+	public boolean eliminarReserva(int codigo) {
+		Reserva reservaAEliminar = buscarReservaPorCodigo(codigo) ; 
+		
+	    if (reservaAEliminar == null) {
+	        System.out.println("Error: No se encontró ninguna reserva con el código " + codigo + ".");
+	        return false;
+	    }
+
+	    this.listaReservas.remove(reservaAEliminar);
+	    System.out.println("Exito: La reserva con codigo " + codigo + " ha sido eliminada permanentemente.");
+	    return true;
+
+	}
 	
 	
+	//---------------------------------------------------------------------------------
+	
+	public boolean editarFechas(int codigo, LocalDate nuevaLlegada, LocalDate nuevaSalida) {
+		Reserva reservaAEditar = buscarReservaPorCodigo(codigo) ; 
+		
+		if(reservaAEditar == null ) {
+	        System.out.println("Error: No se encontró ninguna reserva con el código " + codigo + ".");
+	        return false;
+	    }
+		
+		//--- validacion --- 
+		if(nuevaSalida.isBefore(nuevaLlegada) || nuevaSalida.isEqual(nuevaLlegada)) {
+			System.out.println("Error : La nueva salida deve ser posterior a la nueva fecha de llegada.") ; 
+			
+		}
+		
+	    reservaAEditar.setFechaLlegada(nuevaLlegada);
+	    reservaAEditar.setFechaSalida(nuevaSalida);
+		
+	    
+	    //--- recalculo y re ajustes ---
+	    long numeroNoches = ChronoUnit.DAYS.between(nuevaLlegada, nuevaSalida);
+	    double nuevoMonto = numeroNoches * TarifaUnicaPorNoche; 
+	    reservaAEditar.setMontoTotal(nuevoMonto);
+
+	    System.out.println("Exito: La reserva " + codigo + " ha sido actualizada.");
+	    System.out.println("Nuevo total por " + numeroNoches + " noches: $" + nuevoMonto);
+	    return true;
+		
+	}
+	
+	//------------------------------------------------------------------------------
+	
+	
+	
+
 }
