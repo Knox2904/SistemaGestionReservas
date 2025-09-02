@@ -26,6 +26,12 @@ public class Visitante {
         return email;
     }    
     
-    
+    @Override
+    public String toString() {
+    	return " Rut: " + rut + 
+    			"| Nombre : " + nombre + 
+    			"| email: " + email ; 
+    	
+    }
     
 }

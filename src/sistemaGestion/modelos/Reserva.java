@@ -63,4 +63,11 @@ public class Reserva {
         this.estado = estado;
     }
     
+    @Override
+    public String toString() {
+    	return " Reserva codigo: " + codigoReserva + 
+    			"| Visitante: " + visitante.getNombre() + 
+    			"| Alojamiento: " + idAlojamiento ; 
+    }
+    	
 }

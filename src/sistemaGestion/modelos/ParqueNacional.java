@@ -54,7 +54,38 @@ public class ParqueNacional {
 	}	
 	
 	
-	
-	
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder() ; 
+        
+        sb.append("========================================\n");
+        sb.append("Parque Nacional: ").append(this.nombre);
+        sb.append(" (ID: ").append(this.idParque).append(")\n");
+        sb.append("========================================\n");
+        
+        
+        sb.append("--- Campings Disponibles ---\n") ; 
+        if(this.listaCampings.isEmpty()) {
+        	sb.append("\tNo hay campings disponibles \n") ; 
+        }
+        
+    	else {
+    		for (Camping camping : this.listaCampings) {
+    			sb.append("\t- ").append(camping.toString()).append("\n");
+    		}
+    	}
 
+    	sb.append("\n--- Cabañas Disponibles ---\n");
+    	if (this.listaCabañas.isEmpty()) {
+    		sb.append("\tNo hay cabañas registradas\n");
+    	} 
+    	else {
+    		for (Cabaña cabana : this.listaCabañas) {
+    			
+    			sb.append("\t- ").append(cabana.toString()).append("\n");
+    		}
+    	}
+    	
+    	return sb.toString();
+    }
 }

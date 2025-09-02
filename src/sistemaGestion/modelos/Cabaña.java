@@ -19,5 +19,10 @@ public class Cabaña {
     public int getCapacidad() {
         return capacidad;
     }
-
+    
+    @Override
+    public String toString() {
+    	return " Cabaña ID: " + idCabania + 
+    			" | Capacidad: " + capacidad ; 
+    }
 }

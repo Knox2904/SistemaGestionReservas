@@ -31,6 +31,13 @@ public class Camping {
         return totalSitios;
     }
 
-
+    
+    @Override
+    public String toString() {
+        return " Camping ID: " + idCamping + 
+               " | Nombre Camping : " + nombre + 
+               " | Total sitios: " + totalSitios;
+    }
+    
     
 }
