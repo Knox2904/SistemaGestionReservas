@@ -93,11 +93,11 @@ public class SistemaReservas {
 	    // --- LOGICA MEJORADA ---
 	    String tipoAlojamientoEncontrado = null;
 	    for (ParqueNacional parque : listaParques) {
-	        if (parque.getListaCampings().stream().anyMatch(c -> c.getIdCamping().equalsIgnoreCase(idAlojamiento))) {
+	        if (parque.getListaCampings().stream().anyMatch(c -> c.getId().equalsIgnoreCase(idAlojamiento))) {
 	            tipoAlojamientoEncontrado = "Camping";
 	            break;
 	        }
-	        if (parque.getListaCabañas().stream().anyMatch(cab -> cab.getIdCabaña().equalsIgnoreCase(idAlojamiento))) {
+	        if (parque.getListaCabañas().stream().anyMatch(cab -> cab.getId().equalsIgnoreCase(idAlojamiento))) {
 	            tipoAlojamientoEncontrado = "Cabaña";
 	            break;
 	        }
@@ -307,8 +307,8 @@ public class SistemaReservas {
 	        if (reserva.getEstado().equalsIgnoreCase("Activa")) {
 	        	
 	            // Verificamos si el ID del alojamiento de la reserva existe en las listas del parque.
-	            boolean perteneceAlParque = parqueSeleccionado.getListaCampings().stream().anyMatch(c -> c.getIdCamping().equals(reserva.getIdAlojamiento()))
-	            		||parqueSeleccionado.getListaCabañas().stream().anyMatch(cab -> cab.getIdCabaña().equals(reserva.getIdAlojamiento()));
+	            boolean perteneceAlParque = parqueSeleccionado.getListaCampings().stream().anyMatch(c -> c.getId().equals(reserva.getIdAlojamiento()))
+	            		||parqueSeleccionado.getListaCabañas().stream().anyMatch(cab -> cab.getId().equals(reserva.getIdAlojamiento()));
 	            
 	            if (perteneceAlParque) {
 	                reservasFiltradas.add(reserva);

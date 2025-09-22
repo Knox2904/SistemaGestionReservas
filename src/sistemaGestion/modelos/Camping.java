@@ -3,14 +3,15 @@ package sistemaGestion.modelos;
 //zona
 
 
-public class Camping {
-    private String idCamping;
+public class Camping extends Alojamiento{
+    
+	
     private String nombre;
     private int totalSitios;
 
     public Camping(String idCamping , String nombre , int totalSitios) {
     	
-        this.idCamping = idCamping;
+        super(idCamping) ; 
         this.nombre = nombre;
         this.totalSitios = totalSitios;
 
@@ -18,10 +19,6 @@ public class Camping {
     }
     
     // getter
-    
-    public String getIdCamping() {
-        return idCamping;
-    }
 
     public String getNombre() {
         return nombre;
@@ -30,14 +27,27 @@ public class Camping {
     public int getTotalSitios() {
         return totalSitios;
     }
+    
 
     
-    @Override
+    //setter
+
+    public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public void setTotalSitios(int totalSitios) {
+		this.totalSitios = totalSitios;
+	}
+
+	@Override
     public String toString() {
-        return " Camping ID: " + idCamping + 
-               " | Nombre Camping : " + nombre + 
-               " | Total sitios: " + totalSitios;
+        return "Camping ID: " + id + " | Nombre: " + nombre + " | Sitios: " + totalSitios;
     }
     
+    @Override
+    public String getDescripcion() {
+        return "Camping: " + this.nombre + " con " + this.totalSitios + " sitios.";
+    }
     
 }

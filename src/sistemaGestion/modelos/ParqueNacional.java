@@ -36,15 +36,37 @@ public class ParqueNacional {
 	}
 	
 	
+	
+	public String getIdParque() {
+		return idParque;
+	}
+
+
+	public void setIdParque(String idParque) {
+		this.idParque = idParque;
+	}
+
+
 	public String getNombre() {
-		return nombre ; 
+		return nombre;
 	}
-	
-	public String getId() {
-		return idParque ; 
-	
+
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
-	
+
+
+	public void setListaCampings(ArrayList<Camping> listaCampings) {
+		this.listaCampings = listaCampings;
+	}
+
+
+	public void setListaCabañas(ArrayList<Cabaña> listaCabañas) {
+		this.listaCabañas = listaCabañas;
+	}
+
+
 	public ArrayList<Camping> getListaCampings () {
 		return listaCampings ; 
 	}

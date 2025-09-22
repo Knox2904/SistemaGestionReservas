@@ -1,28 +1,41 @@
 package sistemaGestion.modelos;
 
-public class Cabaña { 
-    private String idCabania; 
+public class Cabaña extends Alojamiento{ 
+    
+	
     private int capacidad;
 
 
     // constructor
-    public Cabaña(String idCabania, int capacidad) {
-        this.idCabania = idCabania;
+    public Cabaña(String idCabaña, int capacidad) {
+        super(idCabaña) ; 
         this.capacidad = capacidad;
     }
 
     // getter
-    public String getIdCabaña() {
-        return idCabania;
-    }
 
     public int getCapacidad() {
         return capacidad;
     }
     
+    
+    
+    //setter
+    public void setCapacidad(int capacidad) {
+		this.capacidad = capacidad;
+	}
+    
+    
+    
     @Override
     public String toString() {
-    	return " Cabaña ID: " + idCabania + 
+    	return " Cabaña ID: " + id + 
     			" | Capacidad: " + capacidad ; 
+    }
+    
+
+	@Override
+    public String getDescripcion() {
+        return "Cabaña con capacidad para " + this.capacidad + " personas.";
     }
 }

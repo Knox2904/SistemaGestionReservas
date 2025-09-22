@@ -26,7 +26,23 @@ public class Visitante {
         return email;
     }    
     
-    @Override
+    
+    //setters
+   
+    
+    public void setRut(String rut) {
+		this.rut = rut;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	@Override
     public String toString() {
     	return " Rut: " + rut + 
     			"| Nombre : " + nombre + 
