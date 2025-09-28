@@ -86,4 +86,6 @@ https://imgur.com/a/1tizqMZ
 
 * Gabriel Sebastián López Quilodrán(Todo el codigo)
 * Felipe Ignacio Castro Rojas(documentacion y Readme)
-Agradecimientos: A herramientas como ChatGPT y GitHub Copilot por la asistencia en la depuración de código y la generación de ideas, ademas de la ortografia y lenguaje formal. 
+
+##Agradecimientos:
+ A herramientas como ChatGPT y GitHub Copilot por la asistencia en la depuración de código y la generación de ideas, ademas de la ortografia y lenguaje formal. 
